@@ -7,7 +7,7 @@
 import os
 
 import demjson
-from requests import post
+import requests
 
 
 class AccessToken:
@@ -47,7 +47,7 @@ class AccessToken:
                     self.secret['token']['client_secret'])
         print(url2)
 
-        res = post(url2)
+        res = requests.post(url2)
         tokens = demjson.decode(res.text)
         print(tokens)
         self.secret['token']['access_token'] = tokens['access_token']
@@ -62,7 +62,7 @@ class AccessToken:
 
         try:
             print(url3)
-            res3 = post(url3)
+            res3 = requests.post(url3)
 
             token_new = demjson.decode(res3.text)
             print(token_new)

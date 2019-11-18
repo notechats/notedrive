@@ -1,4 +1,4 @@
 
 # 安装
 
-pip install git+
+pip install git+https://github.com/notechats/notedrive.git
