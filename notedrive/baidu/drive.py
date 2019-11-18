@@ -7,8 +7,8 @@ import numpy as np
 from requests import Session
 from tqdm import tqdm
 
-APP_ID = 266719  # The app_id of ES file explore on android.
-# APP_ID = 265486  # The app_id of ES file explore on android.
+APP_ID = 266719
+# APP_ID = 265486
 
 BASE_URL_PAN = 'http://pan.baidu.com/rest/2.0/pcs'
 BASE_URL_CPS = 'http://pcs.baidu.com/rest/2.0/pcs'
@@ -357,11 +357,32 @@ class BaiDuDrive(object):
             'ondup': ondup
         }
         files = {yun_path: open(local_path, 'rb')}
-        return self.request('POST', '/file', params=params, files=files, base_url=BASE_URL_CPS_NEW)
+        res = self.request('POST', '/file', params=params, files=files, base_url=BASE_URL_CPS_NEW)
+        print('from {} upload to {} done'.format(local_path, yun_path))
+        return res
 
     def upload_dir(self, local_dir, yun_dir, overwrite=True):
+        """
+        上传文件夹
+        :param local_dir: 本地文件夹
+        :param yun_dir:   云端文件夹
+        :param overwrite: 是否覆盖
+        :return:
+        """
+        if not os.path.exists(local_dir):
+            return True
+        self.mkdir(yun_dir)
 
-        pass
+        for file in os.listdir(local_dir):
+            file_path_local = os.path.join(local_dir, file)
+            file_path_yun = os.path.join(yun_dir, file)
+
+            if os.path.isdir(file_path_local):
+                self.upload_dir(file_path_local, file_path_yun, overwrite=overwrite)
+            else:
+                self.upload(file_path_local, file_path_yun, overwrite=overwrite)
+
+        return True
 
     def upload_tmpfile(self, local_path):
         """分片上传—文件分片及上传 :百度PCS服务支持每次直接上传最大2G的单个文件。
