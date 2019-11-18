@@ -1,4 +1,8 @@
 
+# 说明
+百度云盘的python-api，[官方API](https://openapi.baidu.com/wiki/index.php?title=docs/pcs/rest/file_data_apis_list)
+
+
 # 安装
 
 ```bash
@@ -59,3 +63,14 @@ client.download( '/drive/example/api/test.txt','test2.txt', overwrite=False)
 ## upload_dir 上传 TODO
 
 ## download_dir 上传 TODO
+
+
+
+
+#参考
+
+[baidupcsapi](https://github.com/ly0/baidupcsapi)
+
+[baidu-pcs-python-sdk](https://github.com/mozillazg/baidu-pcs-python-sdk)
+
+
