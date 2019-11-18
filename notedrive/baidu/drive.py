@@ -263,7 +263,9 @@ class SecretManage(object):
         self.key = key
         secret_dir = secret_dir.replace("~", os.environ['HOME'])
         self.secret_path = '{}/{}/.{}'.format(secret_dir, path, key)
-        self.value = value or self.read()
+        self.value = value
+        if self.value is None:
+            self.read()
         if save:
             self.write()
 
@@ -285,6 +287,8 @@ class SecretManage(object):
         """
         写入到文件
         """
+        if self.value is None:
+            return
         try:
             secret_dir = os.path.dirname(self.secret_path)
             if not os.path.exists(secret_dir):
