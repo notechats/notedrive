@@ -8,12 +8,12 @@
 
 from setuptools import setup, find_packages
 
-install_requires = []
+install_requires = ['requests', 'demjson', 'numpy', 'tqdm']
 
 setup(name='notedrive',
-      version='0.0.1',
+      version='0.0.2',
       description='notedrive',
-      author='euler',
+      author='niuliangtao',
       author_email='1007530194@qq.com',
       url='https://github.com/1007530194',
 
