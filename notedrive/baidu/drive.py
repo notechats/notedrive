@@ -258,38 +258,70 @@ class SuperDownloaderM(object):
             os.makedirs(local_dir)
 
 
+class SecretManage(object):
+    def __init__(self, key, value=None, path='default', secret_dir='~/.secret', save=True):
+        self.key = key
+        secret_dir = secret_dir.replace("~", os.environ['HOME'])
+        self.secret_path = '{}/{}/.{}'.format(secret_dir, path, key)
+        self.value = value or self.read()
+        if save:
+            self.write()
+
+    def read(self):
+        """
+        从文件读取
+        """
+        if self.value is not None:
+            return self.value
+        try:
+            if os.path.exists(self.secret_path):
+                self.value = open(self.secret_path).read()
+                print("read from local")
+        except Exception as e:
+            print("read error ,init {}".format(e))
+        return self.value
+
+    def write(self):
+        """
+        写入到文件
+        """
+        try:
+            secret_dir = os.path.dirname(self.secret_path)
+            if not os.path.exists(secret_dir):
+                os.makedirs(secret_dir)
+            with open(self.secret_path, 'w')as f:
+                f.write(self.value)
+                print("write to local")
+        except Exception as e:
+            print('error {}'.format(e))
+
+    def delete_key(self):
+        """
+        删除
+        """
+        if os.path.exists(self.secret_path):
+            os.remove(self.secret_path)
+
+
 class BaiDuDrive(object):
     """
     A client for the PCS API.
     官方API https://openapi.baidu.com/wiki/index.php?title=docs/pcs/rest/file_data_apis_list
-
     """
 
-    def __init__(self, bduss=None, session=None, timeout=None, secret_dir='~/.secret', access_token=None, save=True):
+    def __init__(self, bduss=None, session=None, timeout=None, access_token=None, save=True):
         """
         :param bduss: The value of baidu cookie key `BDUSS`.
         """
-        secret_dir = secret_dir.replace("~", os.environ['HOME'])
-        self.secret_path = '{}/.bduss'.format(secret_dir)
+        self.secret = SecretManage(key='bduss', value=bduss, path='baidu', save=save)
 
-        self.bduss = bduss or None
-        # 如果传入不为空并且可保存，则存入本地
-        if bduss is not None and save:
-            self.write(bduss)
-
-        # 如果没有传入，则取本地缓存
-        if self.bduss is None:
-            self.bduss = self.read()
-
+        self.bduss = self.secret.read()
         self.session = session or Session()
 
         self.access_token = access_token
         self.timeout = timeout
-        # Add core auth cookie
-        self.session.headers.update(
-            {
-                'Cookie': 'BDUSS=%s' % self.bduss,
-            })
+
+        self.session.headers.update({'Cookie': 'BDUSS=%s' % self.bduss})
 
     def quota(self):
         """
@@ -579,7 +611,7 @@ class BaiDuDrive(object):
         """
         获取目录下的文件列表:获取目录下的文件列表。
 
-        :param yun_dir:    需要list的目录，以/开头的绝对路径。注意：: 路径长度限制为1000   文件名或路径名开头结尾不能是“.”或空白字符，空白字符包括: \r, \n, \t, 空格, \0, \x0B
+        :param yun_dir:    需要list的目录，以/开头的绝对路径。
         :param by:         排序字段，缺省根据文件类型排序：
                                 time（修改时间）
                                 name（文件名）
@@ -612,8 +644,8 @@ class BaiDuDrive(object):
         """
         移动单个文件/目录:移动单个文件/目录。
 
-        :param path_from:   源文件地址（包括文件名）。 注意：: 路径长度限制为1000   非必传   文件名或路径名开头结尾不能是‘.’或空白字符，空白字符包括: \r, \n, \t, 空格, \0, \x0B
-        :param path_to:     目标文件地址（包括文件名）。 注意：: 路径长度限制为1000   非必传   文件名或路径名开头结尾不能是“.”或空白字符，空白字符包括: \r, \n, \t, 空格, \0, \x0B
+        :param path_from:   源文件地址（包括文件名）。
+        :param path_to:     目标文件地址（包括文件名）。
 
 
         :return  描述: from   是
@@ -758,30 +790,3 @@ class BaiDuDrive(object):
                                     stream=stream)
 
         return resp.json()
-
-    def read(self):
-        secrets = {}
-        try:
-            secrets = open(self.secret_path).read()
-        except Exception as e:
-            print("read error ,init {}".format(e))
-
-        return secrets
-
-    def write(self, secrets):
-        try:
-
-            secret_dir = os.path.dirname(self.secret_path)
-
-            if not os.path.exists(secret_dir):
-                os.mkdir(secret_dir)
-
-            with open(self.secret_path, 'w')as f:
-                f.write(secrets)
-                print("write to local")
-        except Exception as e:
-            print('error {}'.format(e))
-
-    def delete_key(self):
-        if os.path.exists(self.secret_path):
-            os.remove(self.secret_path)
