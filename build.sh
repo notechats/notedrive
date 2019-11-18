@@ -21,7 +21,7 @@ sleep 10s
 
 rm -rf notedrive.egg-info
 rm -rf dist
-rm -rf bulid
+rm -rf build
 
 
 
