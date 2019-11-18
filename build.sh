@@ -17,7 +17,7 @@ python setup.py bdist_wheel
 # 发布包
 twine upload dist/*
 
-sleep 10s
+sleep 3s
 
 rm -rf notedrive.egg-info
 rm -rf dist

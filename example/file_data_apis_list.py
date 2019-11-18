@@ -1,4 +1,4 @@
-from notedrive.baidu.token import AccessToken
+from notedrive.baidu._token import AccessToken
 
 token = AccessToken(api_key='DmDvl0rVkYGOLu8rN6RgdWMk', secret_key='gP9mLdtrmvRKYEKhtjEdSRKewkDOHnKf')
 # token = AccessToken()
