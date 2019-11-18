@@ -3,7 +3,6 @@ from queue import Queue
 from threading import Thread, Lock, current_thread
 from urllib import parse
 
-import demjson
 import numpy as np
 from requests import Session
 from tqdm import tqdm
@@ -164,7 +163,10 @@ class SuperDownloaderM(object):
         file_size = meta['size']
         local_path = meta['local_path']
         file_name = os.path.basename(local_path)
-        first_byte = os.path.getsize(local_path)
+        if os.path.exists(local_path):
+            first_byte = os.path.getsize(local_path)
+        else:
+            first_byte = 0
 
         self.init_path(local_path)
 
@@ -263,17 +265,21 @@ class BaiDuDrive(object):
 
     """
 
-    def __init__(self, bduss=None, session=None, timeout=None, secret_dir='~/.secret', access_token=None):
+    def __init__(self, bduss=None, session=None, timeout=None, secret_dir='~/.secret', access_token=None, save=True):
         """
         :param bduss: The value of baidu cookie key `BDUSS`.
         """
         secret_dir = secret_dir.replace("~", os.environ['HOME'])
-        self.secret_path = '{}/.baidu_drive'.format(secret_dir)
-        secrets = self.read()
+        self.secret_path = '{}/.bduss'.format(secret_dir)
 
-        if bduss is not None:
-            self.bduss = bduss
-            self.write(secrets)
+        self.bduss = bduss or None
+        # 如果传入不为空并且可保存，则存入本地
+        if bduss is not None and save:
+            self.write(bduss)
+
+        # 如果没有传入，则取本地缓存
+        if self.bduss is None:
+            self.bduss = self.read()
 
         self.session = session or Session()
 
@@ -389,6 +395,8 @@ class BaiDuDrive(object):
             local_filename = yun_filename
         else:
             local_dir, local_filename = os.path.split(local_path)
+            if not local_dir:
+                local_dir = os.getcwd()
             if not os.path.exists(local_dir):
                 os.makedirs(local_dir)
             if not local_filename:
@@ -403,7 +411,11 @@ class BaiDuDrive(object):
         query_string = parse.urlencode(params)
 
         url = BASE_URL_CPS + '/file?%s' % query_string
-        meta = self.meta(yun_path)[0]
+
+        meta = self.meta(yun_path)
+        if len(meta) == 0:
+            return
+        meta = meta[0]
         meta.update({
             "url": url,
             "local_path": local_path
@@ -750,34 +762,26 @@ class BaiDuDrive(object):
     def read(self):
         secrets = {}
         try:
-            secrets = demjson.decode(open(self.secret_path).read())
+            secrets = open(self.secret_path).read()
         except Exception as e:
             print("read error ,init {}".format(e))
-
-        if isinstance(secrets, dict):
-            if secrets.get('pcs', None) is not None:
-                if secrets['pcs'].get('bduss', None) is not None:
-                    self.bduss = secrets['pcs']['bduss']
-                    print("read from local")
-                else:
-                    secrets['pcs']['bduss'] = ""
-            else:
-                secrets['pcs'] = {"bduss": ""}
-        else:
-            secrets = {"pcs": {"bduss": ""}}
 
         return secrets
 
     def write(self, secrets):
         try:
-            secrets['pcs']['bduss'] = self.bduss
+
             secret_dir = os.path.dirname(self.secret_path)
 
             if not os.path.exists(secret_dir):
                 os.mkdir(secret_dir)
 
             with open(self.secret_path, 'w')as f:
-                f.write(demjson.encode(secrets))
+                f.write(secrets)
                 print("write to local")
         except Exception as e:
             print('error {}'.format(e))
+
+    def delete_key(self):
+        if os.path.exists(self.secret_path):
+            os.remove(self.secret_path)
