@@ -8,7 +8,7 @@
 
 from setuptools import setup, find_packages
 
-install_requires = ['requests', 'demjson', 'numpy', 'tqdm']
+install_requires = ['requests', 'demjson', 'numpy', 'tqdm', 'cryptography']
 
 setup(name='notedrive',
       version='0.1.2',
