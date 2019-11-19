@@ -44,7 +44,7 @@ client = BaiDuDrive()
 print(client.meta("/drive/example/api/test.txt"))
 ```
 
-## upload 上传
+## upload 上传单个文件
 ```python
 from notedrive.baidu.drive import BaiDuDrive
 
@@ -52,7 +52,7 @@ client = BaiDuDrive()
 client.upload('test.txt', '/drive/example/api/test.txt', overwrite=False)
 ```
 
-## download 上传
+## download 上传单个文件
 ```python
 from notedrive.baidu.drive import BaiDuDrive
 
@@ -60,9 +60,21 @@ client = BaiDuDrive()
 client.download( '/drive/example/api/test.txt','test2.txt', overwrite=False)
 ```
 
-## upload_dir 上传 TODO
+## upload_dir 上传文件夹 
+```python
+from notedrive.baidu.drive import BaiDuDrive
 
-## download_dir 上传 TODO
+client = BaiDuDrive()
+client.upload_dir('logs', '/drive/example/api/')
+```
+
+## download_dir 下载文件夹
+```python
+from notedrive.baidu.drive import BaiDuDrive
+
+client = BaiDuDrive()
+client.download_dir('/drive/example/api/', 'logs')
+```
 
 
 

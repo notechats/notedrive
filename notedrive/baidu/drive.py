@@ -264,10 +264,12 @@ class SecretManage(object):
         secret_dir = secret_dir.replace("~", os.environ['HOME'])
         self.secret_path = '{}/{}/.{}'.format(secret_dir, path, key)
         self.value = value
-        if self.value is None:
-            self.read()
+
         if save:
             self.write()
+
+        if self.value is None:
+            self.read()
 
     def read(self):
         """
@@ -347,6 +349,7 @@ class BaiDuDrive(object):
         :param yun_path:       云端文件路径（含上传的文件名称）。
         :param overwrite:      是否覆盖同名文件，默认覆盖
         """
+        yun_path, local_path = self.parse_path(yun_path, local_path, isdir=False)
         if overwrite:
             ondup = 'overwrite'
         else:
@@ -369,6 +372,7 @@ class BaiDuDrive(object):
         :param overwrite: 是否覆盖
         :return:
         """
+        yun_dir, local_dir = self.parse_path(yun_dir, local_dir)
         if not os.path.exists(local_dir):
             return True
         self.mkdir(yun_dir)
@@ -445,20 +449,7 @@ class BaiDuDrive(object):
         :param yun_path:      网盘下的文件路径
         :param local_path:    保存本地的文件路径
         """
-        yun_dir, yun_filename = os.path.split(yun_path)
-        cwd = os.getcwd()
-        if local_path is None:
-            local_dir = cwd
-            local_filename = yun_filename
-        else:
-            local_dir, local_filename = os.path.split(local_path)
-            if not local_dir:
-                local_dir = os.getcwd()
-            if not os.path.exists(local_dir):
-                os.makedirs(local_dir)
-            if not local_filename:
-                local_filename = yun_filename
-        local_path = os.path.join(local_dir, local_filename)
+        yun_path, local_path = self.parse_path(yun_path, local_path, isdir=False)
 
         params = {
             'method': 'download',
@@ -490,14 +481,7 @@ class BaiDuDrive(object):
         :param yun_dir:       网盘下的文件路径
         :param local_dir:     保存本地的文件路径
         """
-
-        cwd = os.getcwd()
-        if local_dir is None:
-            local_dir = cwd
-        local_dir = os.path.join(local_dir, os.path.split(yun_dir)[-1])
-
-        if not os.path.exists(local_dir):
-            os.makedirs(local_dir)
+        yun_dir, local_dir = self.parse_path(yun_dir, local_dir)
 
         files = self.list_deep(yun_dir, max_depth=3)
 
@@ -815,3 +799,50 @@ class BaiDuDrive(object):
                                     stream=stream)
 
         return resp.json()
+
+    @staticmethod
+    def parse_path(yun_path, loc_path=None, isdir=True):
+        cwd = os.getcwd()
+
+        def last_dir(path):
+            if path is None:
+                return 'default'
+            p1, p2 = os.path.split(path)
+            if p2 == '':
+                return os.path.split(p1)[-1]
+            else:
+                return p2
+
+        if isdir:
+            if loc_path is None:
+                loc_path = '{}/{}'.format(cwd, last_dir(yun_path))
+            elif loc_path[0] != '/':
+                loc_path = '{}/{}'.format(cwd, loc_path)
+
+            if not os.path.exists(loc_path):
+                os.makedirs(loc_path)
+        else:
+            yun_dir, yun_filename = os.path.split(yun_path)
+
+            # 空路径，保存到当前文件夹下
+            if loc_path is None:
+                loc_path = '{}/{}'.format(cwd, yun_filename)
+            else:
+                loc_dir, loc_filename = os.path.split(loc_path)
+
+                if loc_dir is None or loc_dir == '':
+                    loc_dir = cwd
+                # 相对路径，前面补上全路径
+                elif loc_dir[0] != '/':
+                    loc_dir = '{}/{}'.format(cwd, loc_dir)
+
+                # 没有设置文件名，取默认文件名
+                if loc_filename == '':
+                    loc_filename = yun_filename
+
+                loc_path = os.path.join(loc_dir, loc_filename)
+
+                if not os.path.exists(loc_dir):
+                    os.makedirs(loc_dir)
+
+        return yun_path, loc_path
