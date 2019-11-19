@@ -1,3 +1,4 @@
+import hashlib
 import os
 from queue import Queue
 from threading import Thread, Lock, current_thread
@@ -14,6 +15,18 @@ BASE_URL_PAN = 'http://pan.baidu.com/rest/2.0/pcs'
 BASE_URL_CPS = 'http://pcs.baidu.com/rest/2.0/pcs'
 
 BASE_URL_CPS_NEW = 'http://c.pcs.baidu.com/rest/2.0/pcs'
+
+
+def get_file_md5(path):
+    m = hashlib.md5()
+    with open(path, 'rb') as f:
+        while True:
+            data = f.read(1024 * 4)
+            if not data:
+                break
+            m.update(data)
+
+    return m.hexdigest()
 
 
 class SuperDownloaderBak1(object):
@@ -144,7 +157,7 @@ class SuperDownloaderM(object):
 
         self.init_path(meta['local_path'])
         if os.path.exists(local_path):
-            if not overwrite and os.path.getsize(local_path) / file_size > 0.99:
+            if not overwrite and meta['md5'] == get_file_md5(local_path):
                 print(file_name + ' has been exist!')
                 return True
 

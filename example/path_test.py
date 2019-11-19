@@ -1,3 +1,4 @@
+import hashlib
 import os
 
 
@@ -46,3 +47,20 @@ print(parse_path('/a', 'test'))
 print(parse_path('/a', 'test/', isdir=False))
 print(parse_path('/a.txt'))
 print(parse_path('/a/'))
+
+
+def get_file_md5(path):
+    m = hashlib.md5()
+    with open(path, 'rb') as f:
+        while True:
+            data = f.read(1024 * 4)
+            if not data:
+                break
+            m.update(data)
+
+    return m.hexdigest()
+
+
+file_name = "test2.txt"
+file_md5 = get_file_md5(file_name)
+print(file_md5)
