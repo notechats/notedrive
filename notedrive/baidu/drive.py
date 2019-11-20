@@ -521,16 +521,8 @@ class BaiDuDrive(object):
             })
             paths.append(file)
 
-        print(paths)
-        print(local_dir)
-
-        for i in range(1, 4):
-            path = paths[i]
-            # print(path)
-            # super_downloader = SuperDownloader(path['url'], self.session, path['local_path'], file_meta=path)
+        for path in paths:
             super_downloader = SuperDownloaderM(self.session)
-            # super_downloader.download_single(path)
-            # super_downloader.download_multi(path)
             super_downloader.download(path, overwrite=overwrite)
 
         return True
