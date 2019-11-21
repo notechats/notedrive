@@ -150,15 +150,13 @@ class SuperDownloaderM(object):
                local_path  本地保存路径，包含文件名
         :return:
         """
-
-        file_size = meta['size']
         local_path = meta['local_path']
         file_name = os.path.basename(local_path)
 
         self.init_path(meta['local_path'])
         if os.path.exists(local_path):
             if not overwrite and meta['md5'] == get_file_md5(local_path):
-                print(file_name + ' has been exist!')
+                print(file_name + 'the same md5,file has been exist!, pass')
                 return True
 
         if meta['size'] < 10 * 1024 * 1024:
@@ -373,6 +371,13 @@ class BaiDuDrive(object):
             'ondup': ondup
         }
         files = {yun_path: open(local_path, 'rb')}
+
+        meta = self.meta(yun_path=yun_path)
+        if meta is not None and len(meta) > 0:
+            if get_file_md5(local_path) == meta[0]['md5']:
+                print(yun_path + 'the same md5,file has been exist!, pass')
+                return
+
         res = self.request('POST', '/file', params=params, files=files, base_url=BASE_URL_CPS_NEW)
         print('from {} upload to {} done'.format(local_path, yun_path))
         return res
