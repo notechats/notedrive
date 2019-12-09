@@ -8,7 +8,7 @@
 
 from setuptools import setup, find_packages
 
-install_requires = ['requests', 'demjson', 'numpy', 'tqdm', 'cryptography', 'tushare', 'pandas', 'dateutil',
+install_requires = ['requests', 'demjson', 'numpy', 'tqdm', 'cryptography', 'tushare', 'pandas',
                     'tensorflow', 'keras', 'bs4', 'pycurl', 'scikit-learn', 'notetool']
 
 setup(name='notedrive',
