@@ -8,6 +8,10 @@ import numpy as np
 from requests import Session
 from tqdm import tqdm
 
+from notetool.logtool import log
+
+logger = log(__name__)
+
 APP_ID = 266719
 # APP_ID = 265486
 
@@ -156,7 +160,7 @@ class SuperDownloaderM(object):
         self.init_path(meta['local_path'])
         if os.path.exists(local_path):
             if not overwrite and meta['md5'] == get_file_md5(local_path):
-                print(file_name + 'the same md5,file has been exist!, pass')
+                logger.info(file_name + 'the same md5,file has been exist!, pass')
                 return True
 
         if meta['size'] < 10 * 1024 * 1024:
@@ -203,7 +207,7 @@ class SuperDownloaderM(object):
                             break
                         except Exception as e:
                             time -= 1
-                            print(e)
+                            logger.warning(e)
 
         return True
 
@@ -246,7 +250,7 @@ class SuperDownloaderM(object):
                     break
                 except Exception as e:
                     time -= 1
-                    print(e)
+                    logger.warning(e)
 
     def _consume(self, fp, meta):
         with tqdm(total=np.round(meta['size'] / self.chunk),
@@ -260,7 +264,6 @@ class SuperDownloaderM(object):
                     fp.seek(item[0][0])
                     fp.write(item[1])
                     pbar.update(1)
-                    # print(item[0])
 
     @staticmethod
     def init_path(path):
@@ -291,9 +294,9 @@ class SecretManage(object):
         try:
             if os.path.exists(self.secret_path):
                 self.value = open(self.secret_path).read()
-                print("read from local")
+                logger.info("read from local")
         except Exception as e:
-            print("read error ,init {}".format(e))
+            logger.warning("read error ,init {}".format(e))
         return self.value
 
     def write(self):
@@ -308,9 +311,9 @@ class SecretManage(object):
                 os.makedirs(secret_dir)
             with open(self.secret_path, 'w')as f:
                 f.write(self.value)
-                print("write to local")
+                logger.info("write to local")
         except Exception as e:
-            print('error {}'.format(e))
+            logger.warning('error {}'.format(e))
 
     def delete_key(self):
         """
@@ -375,11 +378,11 @@ class BaiDuDrive(object):
         meta = self.meta(yun_path=yun_path)
         if meta is not None and len(meta) > 0:
             if get_file_md5(local_path) == meta[0]['md5']:
-                print(yun_path + 'the same md5,file has been exist!, pass')
+                logger.info(yun_path + 'the same md5,file has been exist!, pass')
                 return
 
         res = self.request('POST', '/file', params=params, files=files, base_url=BASE_URL_CPS_NEW)
-        print('from {} upload to {} done'.format(local_path, yun_path))
+        logger.info('from {} upload to {} done'.format(local_path, yun_path))
         return res
 
     def upload_dir(self, local_dir, yun_dir, overwrite=True):
