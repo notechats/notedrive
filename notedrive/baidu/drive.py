@@ -21,6 +21,36 @@ BASE_URL_CPS = 'http://pcs.baidu.com/rest/2.0/pcs'
 BASE_URL_CPS_NEW = 'http://c.pcs.baidu.com/rest/2.0/pcs'
 
 
+def split_file(source_file, target_dir, max_line=2000000):
+    file_name = os.path.basename(source_file)
+    flag = 0  # 计数器
+    name = 1  # 文件名
+
+    logger.info("开始。。。。。")
+
+    def get_filename():
+        return str(target_dir) + file_name + '-split-' + str(name) + '.csv'
+
+    write_file = open(get_filename(), 'w+')
+
+    with open(source_file, 'r') as f_source:
+        for line in f_source:
+            flag += 1
+
+            write_file.write(line)
+
+            if flag == max_line:
+                logger.info('done ' + str(flag) + '\t' + get_filename())
+                name += 1
+                flag = 0
+
+                write_file.close()
+                write_file = open(get_filename(), 'w+')
+    write_file.close()
+    logger.info('done ' + str(flag) + '\t' + get_filename())
+    logger.info("完成。。。。。")
+
+
 def get_file_md5(path):
     m = hashlib.md5()
     with open(path, 'rb') as f:

@@ -12,7 +12,7 @@ install_requires = ['requests', 'demjson', 'numpy', 'tqdm', 'cryptography', 'tus
                     'tensorflow', 'keras', 'bs4', 'pycurl', 'scikit-learn', 'notetool']
 
 setup(name='notedrive',
-      version='0.1.7',
+      version='0.1.8',
       description='notedrive',
       author='niuliangtao',
       author_email='1007530194@qq.com',
