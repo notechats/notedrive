@@ -13,12 +13,14 @@ from notetool.logtool import log
 logger = log(__name__)
 
 APP_ID = 266719
+APP_ID_PAN_WEB = 250528
 # APP_ID = 265486
+PAN_HOST = "pan.baidu.com"
+BASE_URL_RST = 'http://pan.baidu.com/rest/2.0'
+BASE_URL_PAN = 'https://pan.baidu.com/rest/2.0/pcs'
+BASE_URL_CPS = 'https://pcs.baidu.com/rest/2.0/pcs'
 
-BASE_URL_PAN = 'http://pan.baidu.com/rest/2.0/pcs'
-BASE_URL_CPS = 'http://pcs.baidu.com/rest/2.0/pcs'
-
-BASE_URL_CPS_NEW = 'http://c.pcs.baidu.com/rest/2.0/pcs'
+BASE_URL_CPS_NEW = 'https://c.pcs.baidu.com/rest/2.0/pcs'
 
 
 def split_file(source_file, target_dir, max_line=2000000):
@@ -829,9 +831,10 @@ class BaiDuDrive(object):
             params = {}
 
         params.update({
-            'app_id': APP_ID,
+            'app_id': params.get('app_id', None) or APP_ID,
             # 'access_token': self.access_token
         })
+        # url = os.path.join(base_url, uri)
         url = base_url + uri
         resp = self.session.request(method, url,
                                     headers=headers,
@@ -840,7 +843,6 @@ class BaiDuDrive(object):
                                     files=files,
                                     timeout=self.timeout,
                                     stream=stream)
-
         return resp.json()
 
     @staticmethod
@@ -889,3 +891,30 @@ class BaiDuDrive(object):
                     os.makedirs(loc_dir)
 
         return yun_path, loc_path
+
+    def offline_task_list(self):
+        params = {
+            'method': 'list_task',
+            'app_id': APP_ID_PAN_WEB
+        }
+        res = self.request('POST', '/services/cloud_dl', params=params, base_url=BASE_URL_RST)
+        return res
+
+    def offline_task_add(self, source_url, save_path='/local'):
+
+        params = {
+            'method': 'add_task',
+            'source_url': source_url,
+            'save_path': save_path,
+            'app_id': APP_ID_PAN_WEB
+        }
+
+        res = self.request('POST', '/services/cloud_dl', params=params, base_url=BASE_URL_RST)
+        return res
+
+    def offline_task_add_list(self, source_urls, save_path='/local'):
+        res = []
+        for source_url in source_urls:
+            res.append(self.offline_task_add(source_url=source_url, save_path=save_path))
+
+        return res
