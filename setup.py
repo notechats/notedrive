@@ -8,11 +8,10 @@
 
 from setuptools import setup, find_packages
 
-install_requires = ['requests', 'demjson', 'numpy', 'tqdm', 'cryptography', 'tushare', 'pandas',
-                    'tensorflow', 'keras', 'bs4', 'pycurl', 'scikit-learn', 'notetool']
+install_requires = ['requests', 'demjson', 'numpy', 'tqdm', 'cryptography', 'pycurl']
 
 setup(name='notedrive',
-      version='0.1.9',
+      version='0.2.0',
       description='notedrive',
       author='niuliangtao',
       author_email='1007530194@qq.com',
