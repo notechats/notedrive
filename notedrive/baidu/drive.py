@@ -1,4 +1,5 @@
 import hashlib
+import logging
 import os
 from queue import Queue
 from threading import Thread, Lock, current_thread
@@ -8,7 +9,15 @@ import numpy as np
 from requests import Session
 from tqdm import tqdm
 
-from notetool import log
+logging.basicConfig(format='%(asctime)s - [line:%(lineno)d] - %(levelname)s: %(message)s')
+
+
+def log(name=None, level=logging.DEBUG):
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+
+    return logger
+
 
 logger = log(__name__)
 
