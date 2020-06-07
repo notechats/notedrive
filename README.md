@@ -2,6 +2,13 @@
 # 说明
 百度云盘的python-api，[官方API](https://openapi.baidu.com/wiki/index.php?title=docs/pcs/rest/file_data_apis_list)
 
+# 使用场景
+数据产出后直接上传备份
+1.网上爬取的数据
+2.模型训练的结果
+3.大一点的数据集
+
+
 # 目录
 
 |方法|描述|
