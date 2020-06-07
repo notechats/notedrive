@@ -11,7 +11,7 @@ from setuptools import setup, find_packages
 install_requires = ['requests', 'demjson', 'numpy', 'tqdm', 'cryptography', 'pycurl', 'notetool']
 
 setup(name='notedrive',
-      version='0.3.0',
+      version='0.3.1',
       description='notedrive',
       author='niuliangtao',
       author_email='1007530194@qq.com',

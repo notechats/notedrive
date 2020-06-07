@@ -2,12 +2,26 @@
 # 说明
 百度云盘的python-api，[官方API](https://openapi.baidu.com/wiki/index.php?title=docs/pcs/rest/file_data_apis_list)
 
+# 目录
+
+|方法|描述|
+|:--:|:--|
+|[安装](#安装)|安装方式|
+|[list](#list-查看)|查看该目录下有哪些文件|
+|[meta](#meta-查看)|可以查看某个文件的具体信息|
+|[upload](#upload-上传单个文件)|上传单个文件|
+|[download](#download-下载单个文件)|下载单个文件|
+|[upload_dir](#upload_dir-上传文件夹)|上传文件夹|
+|[download_dir](#download_dir-下载文件夹)|下载文件夹|
+
+
 
 # 安装
 
 ```bash
 pip install notedrive
 ```
+或者直接从GitHub安装
 ```bash
 pip install git+https://github.com/notechats/notedrive.git
 ```
@@ -60,7 +74,7 @@ client = BaiDuDrive()
 client.download( '/drive/example/api/test.txt','test2.txt', overwrite=False)
 ```
 
-## upload_dir 上传文件夹 
+## upload_dir 上传文件夹
 ```python
 from notedrive.baidu.drive import BaiDuDrive
 
@@ -75,8 +89,6 @@ from notedrive.baidu.drive import BaiDuDrive
 client = BaiDuDrive()
 client.download_dir('/drive/example/api/', 'logs')
 ```
-
-
 
 
 # 参考
