@@ -52,7 +52,7 @@ client = BaiDuDrive()
 client.upload('test.txt', '/drive/example/api/test.txt', overwrite=False)
 ```
 
-## download 上传单个文件
+## download 下载单个文件
 ```python
 from notedrive.baidu.drive import BaiDuDrive
 
