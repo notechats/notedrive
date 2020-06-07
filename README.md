@@ -17,7 +17,7 @@ pip install git+https://github.com/notechats/notedrive.git
 获取百度cookies中的BDUSS值，注意保密
 ```python
 from notedrive.baidu.drive import BaiDuDrive
-client = BaiDuDrive(bduss="",save=True)
+client = BaiDuDrive(bduss="XXXXXXXXXXXXXXXXXXXXXXXX",save=True)
 ```
 第一次使用后，会将BDUSS存入'~/.secret/.bduss'(save=True时)
 
