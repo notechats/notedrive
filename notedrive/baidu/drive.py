@@ -209,11 +209,12 @@ class SuperDownloaderM(object):
                 return True
 
         if meta['size'] < 10 * 1024 * 1024:
-            return self.download_single(meta)
+            return self.download_single(meta, overwrite=True)
         else:
-            return self.download_multi(meta)
+            return self.download_single(meta, overwrite=True)
+            # return self.download_multi(meta, overwrite=True)
 
-    def download_single(self, meta):
+    def download_single(self, meta, overwrite=True):
         """
         单线程下载单个文件
         :param meta:  
@@ -223,6 +224,9 @@ class SuperDownloaderM(object):
         file_size = meta['size']
         local_path = meta['local_path']
         file_name = os.path.basename(local_path)
+        if os.path.exists(local_path) and overwrite:
+            os.remove(local_path)
+
         if os.path.exists(local_path):
             first_byte = os.path.getsize(local_path)
         else:
@@ -256,7 +260,7 @@ class SuperDownloaderM(object):
 
         return True
 
-    def download_multi(self, meta):
+    def download_multi(self, meta, overwrite=True):
         """
         多线程下载单个文件
         :param meta:
@@ -535,7 +539,7 @@ class BaiDuDrive(object):
             "local_path": local_path
         })
         super_downloader = SuperDownloaderM(self.session)
-        super_downloader.download(meta, overwrite=overwrite)
+        super_downloader.download_single(meta, overwrite=overwrite)
 
         return True
 

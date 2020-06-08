@@ -8,7 +8,7 @@ for path in client.list_deep("/drive/example/api"):
 # client.upload('test.txt', '/drive/example/api/test.txt', overwrite=False)
 # client.download('/temp.txt', 'temp.txt')
 
-client.download('/drive/example/api/test.txt', 'test3.txt', overwrite=False)
+client.download('/drive/example/api/30个免费的信息图源文件.zip', '30个免费的信息图源文件.zip', overwrite=True)
 
 # client.upload_dir('/Users/liangtaoniu/workspace/MyDiary/logs', '/drive/example/api/')
 
