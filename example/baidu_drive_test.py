@@ -9,7 +9,8 @@ for path in client.list_deep("/drive/example/api"):
 # client.download('/temp.txt', 'temp.txt')
 
 client.download('/drive/example/api/30个免费的信息图源文件.zip', '30个免费的信息图源文件.zip', overwrite=True)
-
+# client.download('/drive/example/api/dirs2/jupyter-run-2019-09-16.log', 'jupyter-run-2019-09-16.log', overwrite=True)
+#
 # client.upload_dir('/Users/liangtaoniu/workspace/MyDiary/logs', '/drive/example/api/')
 
 #

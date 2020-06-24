@@ -9,6 +9,8 @@ import numpy as np
 from requests import Session
 from tqdm import tqdm
 
+from notetool.download import MultiThreadDownload
+
 logging.basicConfig(format='%(asctime)s - [line:%(lineno)d] - %(levelname)s: %(message)s')
 
 
@@ -186,11 +188,12 @@ class SuperDownloaderM(object):
             self.download(meta, overwrite=overwrite)
         pass
 
-    def download(self, meta, overwrite=True):
+    def download(self, meta, single=True, overwrite=True):
         """
         下载单个文件
         如果单个文件大小小于100MB,启动单线程下载，否则启动多线程下载
 
+        :param single:
         :param overwrite: 是否覆盖
         :param meta:       文件参数，需包含下列参数
                size        文件大小  byte
@@ -207,14 +210,18 @@ class SuperDownloaderM(object):
             if not overwrite and meta['md5'] == get_file_md5(local_path):
                 info(file_name + 'the same md5,file has been exist!, pass')
                 return True
+            else:
+                os.remove(local_path)
 
-        if meta['size'] < 10 * 1024 * 1024:
-            return self.download_single(meta, overwrite=True)
+        if single or meta['size'] < 10 * 1024 * 1024:
+            # return self.download_single(meta)
+            downer = MultiThreadDownload(session=self.session)
+            downer.download(meta['url'], meta['local_path'], overwrite=overwrite, size=meta['size'])
         else:
-            return self.download_single(meta, overwrite=True)
-            # return self.download_multi(meta, overwrite=True)
+            downer = MultiThreadDownload(session=self.session)
+            downer.download(meta['url'], meta['local_path'], overwrite=overwrite, size=meta['size'])
 
-    def download_single(self, meta, overwrite=True):
+    def download_single(self, meta):
         """
         单线程下载单个文件
         :param meta:  
@@ -224,8 +231,6 @@ class SuperDownloaderM(object):
         file_size = meta['size']
         local_path = meta['local_path']
         file_name = os.path.basename(local_path)
-        if os.path.exists(local_path) and overwrite:
-            os.remove(local_path)
 
         if os.path.exists(local_path):
             first_byte = os.path.getsize(local_path)
@@ -240,7 +245,6 @@ class SuperDownloaderM(object):
         with open(local_path, mode=mode) as f:
             with tqdm(initial=np.round(first_byte / self.chunk, 2),
                       total=np.round(file_size / self.chunk, 2),
-                      # unit_scale=True,
                       unit='MB',
                       desc=file_name) as pbar:
                 while position < file_size:
@@ -260,7 +264,7 @@ class SuperDownloaderM(object):
 
         return True
 
-    def download_multi(self, meta, overwrite=True):
+    def download_multi(self, meta):
         """
         多线程下载单个文件
         :param meta:
@@ -538,9 +542,16 @@ class BaiDuDrive(object):
             "url": url,
             "local_path": local_path
         })
-        super_downloader = SuperDownloaderM(self.session)
-        super_downloader.download_single(meta, overwrite=overwrite)
+        # super_downloader = SuperDownloaderM(self.session)
+        # super_downloader.download(meta, single=False, overwrite=overwrite)
 
+        from notetool.download import download
+        download(meta['url'],
+                 meta['local_path'],
+                 overwrite=overwrite,
+                 size=meta['size'],
+                 mode='single',
+                 session=self.session)
         return True
 
     def download_dir(self, yun_dir, local_dir=None, overwrite=True):
@@ -838,8 +849,8 @@ class BaiDuDrive(object):
         }
         return self.request('POST', '/file', params=params)
 
-    def get(self, uri, params):
-        return self.request('GET', uri, params=params)
+    def get(self, uri, params, *args, **kwargs):
+        return self.request('GET', uri, params=params, *args, **kwargs)
 
     def request(self, method, uri, headers=None, params=None, data=None, files=None, stream=None, base_url=None):
         if base_url is None:
