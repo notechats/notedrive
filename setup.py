@@ -1,17 +1,18 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# @Time    : 2019/03/30 12:10
-# @Author  : niuliangtao
-# @Site    :
-# @File    : setup.py
-# @Software: PyCharm
+import sys
+from os import path
 
 from setuptools import setup, find_packages
 
-install_requires = ['requests', 'demjson', 'numpy', 'tqdm', 'cryptography', 'pycurl', 'notetool']
+from notetool.tool import get_version
+
+version_path = path.join(path.abspath(path.dirname(__file__)), 'script/__version__.md')
+
+version = get_version(sys.argv, version_path, step=16)
+
+install_requires = ['requests', 'demjson', 'numpy', 'tqdm', 'cryptography', 'pycurl', 'notetool', 'urllib3']
 
 setup(name='notedrive',
-      version='0.3.1',
+      version=version,
       description='notedrive',
       author='niuliangtao',
       author_email='1007530194@qq.com',

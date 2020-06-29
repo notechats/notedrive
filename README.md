@@ -1,6 +1,8 @@
 
 # 说明
-百度云盘的python-api，[官方API](https://openapi.baidu.com/wiki/index.php?title=docs/pcs/rest/file_data_apis_list)
+百度云盘的python-api，[官方API](https://openapi.baidu.com/wiki/index.php?title=docs/pcs/rest/file_data_apis_list)  
+蓝奏云的python-api [参考](https://github.com/zaxtyson/LanZouCloud-API)
+
 
 # 使用场景
 数据产出后直接上传备份  
@@ -98,10 +100,9 @@ client.download_dir('/drive/example/api/', 'logs')
 ```
 
 
+
 # 参考
-
 [baidupcsapi](https://github.com/ly0/baidupcsapi)
-
 [baidu-pcs-python-sdk](https://github.com/mozillazg/baidu-pcs-python-sdk)
 
 
