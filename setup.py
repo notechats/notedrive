@@ -10,7 +10,7 @@ version_path = path.join(path.abspath(path.dirname(__file__)), 'script/__version
 version = get_version(sys.argv, version_path, step=16)
 
 install_requires = [
-    'requests', 'demjson', 'numpy', 'tqdm', 'cryptography', 'pycurl', 'notetool', 'urllib3'
+    'requests', 'demjson', 'numpy', 'tqdm', 'cryptography', 'pycurl', 'urllib3'
 ]
 
 dependency_links = [
