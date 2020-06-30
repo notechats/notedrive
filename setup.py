@@ -12,7 +12,7 @@ version = get_version(sys.argv, version_path, step=16)
 install_requires = ['requests', 'demjson', 'numpy', 'tqdm', 'cryptography', 'pycurl', 'notetool', 'urllib3']
 
 dependency_links = [
-    'git+https://github.com/notechats/notedrive.git'
+    'git+https://github.com/notechats/notetool.git'
 ]
 setup(name='notedrive',
       version=version,
