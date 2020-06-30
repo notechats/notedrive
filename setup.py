@@ -11,7 +11,6 @@ version = get_version(sys.argv, version_path, step=16)
 
 install_requires = [
     'requests', 'demjson', 'numpy', 'tqdm', 'cryptography', 'pycurl', 'notetool', 'urllib3'
-    , 'git+https://github.com/notechats/notetool.git'
 ]
 
 dependency_links = [
