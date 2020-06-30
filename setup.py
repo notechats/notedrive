@@ -9,7 +9,10 @@ version_path = path.join(path.abspath(path.dirname(__file__)), 'script/__version
 
 version = get_version(sys.argv, version_path, step=16)
 
-install_requires = ['requests', 'demjson', 'numpy', 'tqdm', 'cryptography', 'pycurl', 'notetool', 'urllib3']
+install_requires = [
+    'requests', 'demjson', 'numpy', 'tqdm', 'cryptography', 'pycurl', 'notetool', 'urllib3'
+    , 'git+https://github.com/notechats/notetool.git'
+]
 
 dependency_links = [
     'git+https://github.com/notechats/notetool.git'
