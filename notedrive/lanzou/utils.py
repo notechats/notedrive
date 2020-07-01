@@ -7,12 +7,10 @@ from random import uniform, choices, sample, shuffle, choice
 
 import requests
 
-__all__ = ['logger', 'remove_notes', 'name_format', 'time_format', 'is_name_valid', 'is_file_url',
-           'is_folder_url', 'big_file_split', 'un_serialize', 'let_me_upload']
-
 # 调试日志设置
 logger = logging.getLogger('lanzou')
 logger.setLevel(logging.ERROR)
+# logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter(
     fmt="%(asctime)s [line:%(lineno)d] %(funcName)s %(levelname)s - %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S")
@@ -188,3 +186,19 @@ def let_me_upload(file_path):
         data = pickle.dumps(data)
         out_f.write(data)
     return new_file_path
+
+
+def unit_step(size):
+    if size < 1024:
+        unit = 'B'
+        step = 1
+    elif size < 1024 * 1024:
+        unit = 'KB'
+        step = 1024
+    elif size < 1024 * 1024 * 1024:
+        unit = 'MB'
+        step = 1024 * 1024
+    else:
+        unit = 'GB'
+        step = 1024 * 1024 * 1024
+    return unit, step * 1.0

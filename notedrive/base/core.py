@@ -4,6 +4,7 @@ from threading import Lock
 from time import sleep
 
 import numpy as np
+import pycurl
 from requests import Session
 from tqdm import tqdm
 
@@ -165,7 +166,6 @@ class PyCurlDownLoad(BaseDownLoad):
         super(PyCurlDownLoad, self).__init__(*args, **kwargs)
 
     def _download(self, url, path, size=0):
-        import pycurl
         with open(self.path, 'wb') as f:
             c = pycurl.Curl()
             c.setopt(pycurl.URL, self.url)

@@ -7,15 +7,10 @@ from notetool.tool import get_version
 
 version_path = path.join(path.abspath(path.dirname(__file__)), 'script/__version__.md')
 
-version = get_version(sys.argv, version_path, step=16)
+version = get_version(sys.argv, version_path, step=32)
 
-install_requires = [
-    'requests', 'demjson', 'numpy', 'tqdm', 'cryptography', 'pycurl', 'urllib3'
-]
+install_requires = ['requests', 'demjson', 'tqdm', 'cryptography', 'pycurl', 'urllib3', 'notetool', 'requests_toolbelt']
 
-dependency_links = [
-    'git+https://github.com/notechats/notetool.git'
-]
 setup(name='notedrive',
       version=version,
       description='notedrive',
@@ -25,5 +20,4 @@ setup(name='notedrive',
 
       packages=find_packages(),
       install_requires=install_requires,
-      dependency_links=dependency_links
       )
