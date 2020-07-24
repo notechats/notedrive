@@ -11,9 +11,8 @@ import requests
 logger = logging.getLogger('lanzou')
 logger.setLevel(logging.ERROR)
 # logger.setLevel(logging.DEBUG)
-formatter = logging.Formatter(
-    fmt="%(asctime)s [line:%(lineno)d] %(funcName)s %(levelname)s - %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S")
+formatter = logging.Formatter(fmt="%(asctime)s [line:%(lineno)d] %(funcName)s %(levelname)s - %(message)s",
+                              datefmt="%Y-%m-%d %H:%M:%S")
 console = logging.StreamHandler()
 console.setFormatter(formatter)
 logger.addHandler(console)

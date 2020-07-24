@@ -1368,3 +1368,10 @@ class LanZouCloud(object):
                 logger.error("download error folder_id={}".format(folder_id))
 
         return CodeDetail.SUCCESS
+
+
+def download(url, dir_pwd='./download'):
+    downer = LanZouCloud()
+    downer.ignore_limits()
+    downer.down_dir_by_url(url, dir_pwd=dir_pwd)
+    

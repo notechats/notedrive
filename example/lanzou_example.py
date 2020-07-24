@@ -2,7 +2,9 @@ from notedrive.lanzou import LanZouCloud, CodeDetail
 
 downer = LanZouCloud()
 downer.ignore_limits()
-downer.login_by_cookie()
+
+
+# downer.login_by_cookie()
 
 
 def example1():
@@ -15,21 +17,27 @@ def example2():
 
 
 def example3():
-    # downer.down_dir_by_url('https://wws.lanzous.com/b01hh31id', dir_pwd='./download/lanzou')
+    downer.down_dir_by_url('https://wws.lanzous.com/b01hjn3aj', dir_pwd='./download/lanzou')
     # downer.down_dir_by_url('https://wws.lanzous.com/b01hh63kf', dir_pwd='./download/lanzou')
-    downer.down_dir_by_url('https://wws.lanzous.com/b01hh2zve', dir_pwd='./download/lanzou')
-    #
+    # downer.down_dir_by_url('https://wws.lanzous.com/b01hh2zve', dir_pwd='./download/lanzou')
+
+    pass
 
 
 def example4():
-    downer.upload_file('/Users/liangtaoniu/workspace/dataset/tianchi001/trainset.zip', folder_id=2010460)
-    downer.upload_file('/Users/liangtaoniu/workspace/dataset/tianchi001/test_input.zip', folder_id=2010460)
+    # downer.upload_file('/Users/liangtaoniu/workspace/MyDiary/tmp/models/yolo/configs/yolov3.h5', folder_id=2129808)
+    # downer.upload_file('/Users/liangtaoniu/workspace/MyDiary/tmp/models/yolo/configs/yolov3.weights', folder_id=2129808)
+    downer.upload_file('/Users/liangtaoniu/workspace/dataset/models/yolov4.weights', folder_id=2129808)
+
+    pass
 
 
 def example5():
-    print(downer.get_dir_list(folder_id=2010460))
+    print(downer.get_dir_list(folder_id=2129808))
 
 
-example4()
-# example2()
 example3()
+# example4()
+# example2()
+example5()
+# https://wws.lanzous.com/b01hjn3aj
