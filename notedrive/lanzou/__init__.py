@@ -1,1 +1,1 @@
-from notedrive.lanzou.core import LanZouCloud, CodeDetail
+from notedrive.lanzou.core import LanZouCloud, CodeDetail, download
