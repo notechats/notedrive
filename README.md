@@ -1,7 +1,6 @@
-
-# 说明
-百度云盘的python-api，[官方API](https://openapi.baidu.com/wiki/index.php?title=docs/pcs/rest/file_data_apis_list)  
-蓝奏云的python-api [参考](https://github.com/zaxtyson/LanZouCloud-API)
+# 概述
+1.支持百度云盘、蓝奏云盘的上传、下载
+2.百度云盘分享链接经常失效、蓝奏云永久有效
 
 
 # 使用场景
@@ -11,17 +10,12 @@
 3.大一点的数据集  
 
 
-# 目录
-
-|方法|描述|
-|:--:|:--|
-|[安装](#安装)|安装方式|
-|[list](#list-查看)|查看该目录下有哪些文件|
-|[meta](#meta-查看)|可以查看某个文件的具体信息|
-|[upload](#upload-上传单个文件)|上传单个文件|
-|[download](#download-下载单个文件)|下载单个文件|
-|[upload_dir](#upload_dir-上传文件夹)|上传文件夹|
-|[download_dir](#download_dir-下载文件夹)|下载文件夹|
+# 分类
+|序号|网盘|文档|实例|支持内容|
+|:--:|:--|:--|:--|:--|
+|1|基础下载|[doc](https://github.com/notechats/notedrive/tree/master/notedrive/base/README.md)|[example](https://github.com/notechats/notedrive/blob/master/example/base_example.py)|多线程下载|
+|2|百度云|[doc](https://github.com/notechats/notedrive/tree/master/notedrive/baidu/README.md)|[example](https://github.com/notechats/notedrive/blob/master/example/baidu_example.py)|上传、下载|
+|3|蓝奏云|[doc](https://github.com/notechats/notedrive/tree/master/notedrive/lanzou/README.md)|[example](https://github.com/notechats/notedrive/blob/master/example/lanzou_example.py)|上传、下载|
 
 
 
@@ -35,74 +29,22 @@ pip install notedrive
 pip install git+https://github.com/notechats/notedrive.git
 ```
 
-# 使用
-## 第一次使用
-获取百度cookies中的BDUSS值，注意保密
-```python
-from notedrive.baidu.drive import BaiDuDrive
-client = BaiDuDrive(bduss="XXXXXXXXXXXXXXXXXXXXXXXX",save=True)
-```
-第一次使用后，会将BDUSS存入'~/.secret/.bduss'(save=True时)
-
-如果允许保存到本地，则下次调用不用传入dbuss,即
-```python
-from notedrive.baidu.drive import BaiDuDrive
-client = BaiDuDrive()
-```
-
-## list 查看
-```python
-from notedrive.baidu.drive import BaiDuDrive
-
-client = BaiDuDrive()
-for path in client.list("/drive/example/api"):
-    print(path['server_filename'])
-```
-
-## meta 查看
-```python
-from notedrive.baidu.drive import BaiDuDrive
-
-client = BaiDuDrive()
-print(client.meta("/drive/example/api/test.txt"))
-```
-
-## upload 上传单个文件
-```python
-from notedrive.baidu.drive import BaiDuDrive
-
-client = BaiDuDrive()
-client.upload('test.txt', '/drive/example/api/test.txt', overwrite=False)
-```
-
-## download 下载单个文件
-```python
-from notedrive.baidu.drive import BaiDuDrive
-
-client = BaiDuDrive()
-client.download( '/drive/example/api/test.txt','test2.txt', overwrite=False)
-```
-
-## upload_dir 上传文件夹
-```python
-from notedrive.baidu.drive import BaiDuDrive
-
-client = BaiDuDrive()
-client.upload_dir('logs', '/drive/example/api/')
-```
-
-## download_dir 下载文件夹
-```python
-from notedrive.baidu.drive import BaiDuDrive
-
-client = BaiDuDrive()
-client.download_dir('/drive/example/api/', 'logs')
-```
 
 
 
-# 参考
-[baidupcsapi](https://github.com/ly0/baidupcsapi)
-[baidu-pcs-python-sdk](https://github.com/mozillazg/baidu-pcs-python-sdk)
+# 为啥要做这个
+1.工作学习中经常用的数据集，尤其是国外数据集，下载速度贼慢
+2.网上找数据比较麻烦
+3.预借助蓝奏云，将一些国内外公开数据集放到一起，整理到[notedata](https://github.com/notechats/notedata)
+
+
+
+
+
+#参考
+百度云盘的python-api，[官方API](https://openapi.baidu.com/wiki/index.php?title=docs/pcs/rest/file_data_apis_list)  
+蓝奏云的python-api [参考](https://github.com/zaxtyson/LanZouCloud-API)
+
+
 
 
