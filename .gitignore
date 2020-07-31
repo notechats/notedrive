@@ -3,3 +3,4 @@ example/download
 notedrive/base/__pycache__
 notedrive/baidu/__pycache__
 notedrive/lanzou/__pycache__
+*.pyc
