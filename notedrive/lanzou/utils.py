@@ -9,7 +9,8 @@ import requests
 
 # 调试日志设置
 logger = logging.getLogger('lanzou')
-logger.setLevel(logging.ERROR)
+logger.setLevel(logging.INFO)
+# logger.setLevel(logging.ERROR)
 # logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter(fmt="%(asctime)s [line:%(lineno)d] %(funcName)s %(levelname)s - %(message)s",
                               datefmt="%Y-%m-%d %H:%M:%S")
