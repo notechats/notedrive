@@ -7,16 +7,11 @@ from random import uniform, choices, sample, shuffle, choice
 
 import requests
 
+from notetool.tool.log import log
+
 # 调试日志设置
-logger = logging.getLogger('lanzou')
+logger = log('lanzou')
 logger.setLevel(logging.INFO)
-# logger.setLevel(logging.ERROR)
-# logger.setLevel(logging.DEBUG)
-formatter = logging.Formatter(fmt="%(asctime)s [line:%(lineno)d] %(funcName)s %(levelname)s - %(message)s",
-                              datefmt="%Y-%m-%d %H:%M:%S")
-console = logging.StreamHandler()
-console.setFormatter(formatter)
-logger.addHandler(console)
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36',

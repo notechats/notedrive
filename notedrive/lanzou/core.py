@@ -1373,5 +1373,4 @@ class LanZouCloud(object):
 def download(url, dir_pwd='./download'):
     downer = LanZouCloud()
     downer.ignore_limits()
-    downer.down_dir_by_url(url, dir_pwd=dir_pwd)
-    
+    downer.down_dir_by_url(url, save_path=dir_pwd)
