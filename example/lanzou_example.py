@@ -25,23 +25,8 @@ def example3():
 
 def example4():
     print("upload")
-    # downer.upload_file('/Users/liangtaoniu/workspace/MyDiary/tmp/models/yolo/configs/yolov3.h5', folder_id=2129808)
-    # downer.upload_file('/Users/liangtaoniu/workspace/MyDiary/tmp/models/yolo/configs/yolov3.weights', folder_id=2129808)
-    # downer.upload_file('/Users/liangtaoniu/workspace/dataset/models/yolov4.weights', folder_id=2129808)
-    # res = downer.upload_file('/Users/liangtaoniu/workspace/dataset/models/annotations_trainval2017.zip',
-    #                         folder_id=2160967)
-    # res = downer.upload_file('/Users/liangtaoniu/workspace/dataset/models/val2017.zip', folder_id=2160967)
-
-    # res = downer.upload_file('/Users/liangtaoniu/tmp/dataset/movielens/ml-100k.zip', folder_id=2184164)
-    # res = downer.upload_file('/Users/liangtaoniu/tmp/dataset/movielens/ml-1m.zip', folder_id=2184164)
-    # res = downer.upload_file('/Users/liangtaoniu/tmp/dataset/movielens/ml-10m.zip', folder_id=2184164)
-    # res = downer.upload_file('/Users/liangtaoniu/tmp/dataset/movielens/ml-20m.zip', folder_id=2184164)
-
-    # res = downer.upload_file('/Users/liangtaoniu/workspace/dataset/models/ml-25m.zip', folder_id=2184164)
-
-    res = downer.upload_file(
-        '/Users/liangtaoniu/workspace/MyDiary/notechats/notekeras/example/yolo4/models/yolov4-416.h5',
-        folder_id=2129808)
+    res = downer.upload_file('/tmp/models/yolo/configs/yolov3.h5', folder_id=2129808)
+    res = downer.upload_file('/tmp/models/yolo/configs/yolov3.weights', folder_id=2129808)
 
     print(res)
     pass
