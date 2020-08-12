@@ -4,7 +4,6 @@ from random import random
 from time import sleep
 from typing import List
 
-import requests
 from requests_toolbelt import MultipartEncoder, MultipartEncoderMonitor
 from tqdm import tqdm
 from urllib3 import disable_warnings
@@ -12,40 +11,6 @@ from urllib3.exceptions import InsecureRequestWarning
 
 from notedrive.lanzou.utils import *
 from notetool import SecretManage
-
-
-def is_file_url(share_url: str) -> bool:
-    """判断是否为文件的分享链接"""
-    base_pat = r'https?://.+?\.lanzou[six].com/.+'
-    user_pat = r'https?://.+?\.lanzou[six].com/i[a-z0-9]{5,}/?'  # 普通用户 URL 规则
-    if not re.fullmatch(base_pat, share_url):
-        return False
-    elif re.fullmatch(user_pat, share_url):
-        return True
-    else:  # VIP 用户的 URL 很随意
-        try:
-            html = requests.get(share_url, headers=headers).text
-            html = remove_notes(html)
-            return True if re.search(r'class="fileinfo"|id="file"|文件描述', html) else False
-        except (requests.RequestException, Exception):
-            return False
-
-
-def is_folder_url(share_url: str) -> bool:
-    """判断是否为文件夹的分享链接"""
-    base_pat = r'https?://.+?\.lanzou[six].com/.+'
-    user_pat = r'https?://.+?\.lanzou[six].com/b[a-z0-9]{7,}/?'
-    if not re.fullmatch(base_pat, share_url):
-        return False
-    elif re.fullmatch(user_pat, share_url):
-        return True
-    else:  # VIP 用户的 URL 很随意
-        try:
-            html = requests.get(share_url, headers=headers).text
-            html = remove_notes(html)
-            return True if re.search(r'id="infos"', html) else False
-        except (requests.RequestException, Exception):
-            return False
 
 
 def File(name='', id=0, time='', size='', _type='', downs=0, has_pwd=0, has_des=0, type='', ) -> dict:
