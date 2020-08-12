@@ -4,6 +4,7 @@ from random import random
 from time import sleep
 from typing import List
 
+import requests
 from requests_toolbelt import MultipartEncoder, MultipartEncoderMonitor
 from tqdm import tqdm
 from urllib3 import disable_warnings
@@ -13,7 +14,40 @@ from notedrive.lanzou.utils import *
 from notetool import SecretManage
 
 
-# File = namedtuple('File', ['name', 'id', 'time', 'size', 'type', 'downs', 'has_pwd', 'has_des'])
+def is_file_url(share_url: str) -> bool:
+    """判断是否为文件的分享链接"""
+    base_pat = r'https?://.+?\.lanzou[six].com/.+'
+    user_pat = r'https?://.+?\.lanzou[six].com/i[a-z0-9]{5,}/?'  # 普通用户 URL 规则
+    if not re.fullmatch(base_pat, share_url):
+        return False
+    elif re.fullmatch(user_pat, share_url):
+        return True
+    else:  # VIP 用户的 URL 很随意
+        try:
+            html = requests.get(share_url, headers=headers).text
+            html = remove_notes(html)
+            return True if re.search(r'class="fileinfo"|id="file"|文件描述', html) else False
+        except (requests.RequestException, Exception):
+            return False
+
+
+def is_folder_url(share_url: str) -> bool:
+    """判断是否为文件夹的分享链接"""
+    base_pat = r'https?://.+?\.lanzou[six].com/.+'
+    user_pat = r'https?://.+?\.lanzou[six].com/b[a-z0-9]{7,}/?'
+    if not re.fullmatch(base_pat, share_url):
+        return False
+    elif re.fullmatch(user_pat, share_url):
+        return True
+    else:  # VIP 用户的 URL 很随意
+        try:
+            html = requests.get(share_url, headers=headers).text
+            html = remove_notes(html)
+            return True if re.search(r'id="infos"', html) else False
+        except (requests.RequestException, Exception):
+            return False
+
+
 def File(name='', id=0, time='', size='', _type='', downs=0, has_pwd=0, has_des=0, type='', ) -> dict:
     return {
         'id': id,
@@ -27,7 +61,6 @@ def File(name='', id=0, time='', size='', _type='', downs=0, has_pwd=0, has_des=
     }
 
 
-# Folder = namedtuple('Folder', ['name', 'id', 'has_pwd', 'desc'])
 def Folder(name='', id=0, has_pwd=False, desc='') -> dict:
     return {
         'name': name,
@@ -37,7 +70,6 @@ def Folder(name='', id=0, has_pwd=False, desc='') -> dict:
     }
 
 
-# FolderId = namedtuple('FolderId', ['name', 'id'])
 def FolderId(name, id) -> dict:
     return {
         'name': name,
@@ -45,7 +77,6 @@ def FolderId(name, id) -> dict:
     }
 
 
-# RecFile = namedtuple('RecFile', ['name', 'id', 'type', 'size', 'time'])
 def rec_file(name, id, _type='', size='', time='', type='') -> dict:
     return {
         'name': name,
@@ -56,7 +87,6 @@ def rec_file(name, id, _type='', size='', time='', type='') -> dict:
     }
 
 
-# RecFolder = namedtuple('RecFolder', ['name', 'id', 'size', 'time', 'files'])
 def rec_folder(name, id, size, time, files) -> dict:
     return {
         'name': name,
@@ -67,8 +97,6 @@ def rec_folder(name, id, size, time, files) -> dict:
     }
 
 
-# FileDetail = namedtuple('FileDetail', ['code', 'name', 'size', 'type', 'time', 'desc', 'pwd', 'url', 'durl'],
-#                         defaults=(0, *[''] * 8))
 def file_detail(code=0, name='', size='', _type='', time='', desc='', pwd='', url='', durl='', type='') -> dict:
     return {
         'code': code,
@@ -83,7 +111,6 @@ def file_detail(code=0, name='', size='', _type='', time='', desc='', pwd='', ur
     }
 
 
-# ShareInfo = namedtuple('ShareInfo', ['code', 'name', 'url', 'pwd', 'desc'], defaults=(0, *[''] * 4))
 def ShareInfo(code=0, name='', url='', pwd='', desc='', ) -> dict:
     return {
         'code': code,
@@ -94,7 +121,6 @@ def ShareInfo(code=0, name='', url='', pwd='', desc='', ) -> dict:
     }
 
 
-# DirectUrlInfo = namedtuple('DirectUrlInfo', ['code', 'name', 'durl'])
 def direct_url_info(code, name, durl) -> dict:
     return {
         'code': code,
@@ -103,7 +129,6 @@ def direct_url_info(code, name, durl) -> dict:
     }
 
 
-# FolderInfo = namedtuple('Folder', ['name', 'id', 'pwd', 'time', 'desc', 'url'], defaults=('',) * 6)
 def folder_info(name='', id=0, pwd='', time='', desc='', url='') -> dict:
     return {
         'name': name,
@@ -115,7 +140,6 @@ def folder_info(name='', id=0, pwd='', time='', desc='', url='') -> dict:
     }
 
 
-# FileInFolder = namedtuple('FileInFolder', ['name', 'time', 'size', 'type', 'url'], defaults=('',) * 5)
 def file_in_folder(name='', time='', size='', _type='', url='', type='') -> dict:
     return {
         'name': name,
@@ -126,7 +150,6 @@ def file_in_folder(name='', time='', size='', _type='', url='', type='') -> dict
     }
 
 
-# FolderDetail = namedtuple('FolderDetail', ['code', 'folder', 'files'], defaults=(0, None, None))
 def FolderDetail(code=0, folder=None, files=None) -> dict:
     return {
         'code': code,
@@ -1369,8 +1392,14 @@ class LanZouCloud(object):
 
         return CodeDetail.SUCCESS
 
+    def down_by_url(self, share_url, dir_pwd='', save_path='./download', *, mkdir=True) -> int:
+        if is_file_url(share_url):
+            return self.down_file_by_url(share_url, pwd=dir_pwd, save_path=save_path)
+        elif is_folder_url(share_url):
+            return self.down_dir_by_url(share_url, dir_pwd=dir_pwd, save_path=save_path, mkdir=mkdir)
+
 
 def download(url, dir_pwd='./download'):
     downer = LanZouCloud()
     downer.ignore_limits()
-    downer.down_dir_by_url(url, save_path=dir_pwd)
+    downer.down_by_url(url, save_path=dir_pwd)

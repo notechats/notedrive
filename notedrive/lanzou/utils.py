@@ -5,8 +5,6 @@ import re
 from datetime import timedelta, datetime
 from random import uniform, choices, sample, shuffle, choice
 
-import requests
-
 from notetool.tool.log import log
 
 # 调试日志设置
@@ -62,38 +60,39 @@ def is_name_valid(filename: str) -> bool:
     return filename.split('.')[-1] in valid_suffix_list
 
 
-def is_file_url(share_url: str) -> bool:
-    """判断是否为文件的分享链接"""
-    base_pat = r'https?://.+?\.lanzou[six].com/.+'
-    user_pat = r'https?://.+?\.lanzou[six].com/i[a-z0-9]{5,}/?'  # 普通用户 URL 规则
-    if not re.fullmatch(base_pat, share_url):
-        return False
-    elif re.fullmatch(user_pat, share_url):
-        return True
-    else:  # VIP 用户的 URL 很随意
-        try:
-            html = requests.get(share_url, headers=headers).text
-            html = remove_notes(html)
-            return True if re.search(r'class="fileinfo"|id="file"|文件描述', html) else False
-        except (requests.RequestException, Exception):
-            return False
+#
+# def is_file_url(share_url: str) -> bool:
+#     """判断是否为文件的分享链接"""
+#     base_pat = r'https?://.+?\.lanzou[six].com/.+'
+#     user_pat = r'https?://.+?\.lanzou[six].com/i[a-z0-9]{5,}/?'  # 普通用户 URL 规则
+#     if not re.fullmatch(base_pat, share_url):
+#         return False
+#     elif re.fullmatch(user_pat, share_url):
+#         return True
+#     else:  # VIP 用户的 URL 很随意
+#         try:
+#             html = requests.get(share_url, headers=headers).text
+#             html = remove_notes(html)
+#             return True if re.search(r'class="fileinfo"|id="file"|文件描述', html) else False
+#         except (requests.RequestException, Exception):
+#             return False
 
-
-def is_folder_url(share_url: str) -> bool:
-    """判断是否为文件夹的分享链接"""
-    base_pat = r'https?://.+?\.lanzou[six].com/.+'
-    user_pat = r'https?://.+?\.lanzou[six].com/b[a-z0-9]{7,}/?'
-    if not re.fullmatch(base_pat, share_url):
-        return False
-    elif re.fullmatch(user_pat, share_url):
-        return True
-    else:  # VIP 用户的 URL 很随意
-        try:
-            html = requests.get(share_url, headers=headers).text
-            html = remove_notes(html)
-            return True if re.search(r'id="infos"', html) else False
-        except (requests.RequestException, Exception):
-            return False
+#
+# def is_folder_url(share_url: str) -> bool:
+#     """判断是否为文件夹的分享链接"""
+#     base_pat = r'https?://.+?\.lanzou[six].com/.+'
+#     user_pat = r'https?://.+?\.lanzou[six].com/b[a-z0-9]{7,}/?'
+#     if not re.fullmatch(base_pat, share_url):
+#         return False
+#     elif re.fullmatch(user_pat, share_url):
+#         return True
+#     else:  # VIP 用户的 URL 很随意
+#         try:
+#             html = requests.get(share_url, headers=headers).text
+#             html = remove_notes(html)
+#             return True if re.search(r'id="infos"', html) else False
+#         except (requests.RequestException, Exception):
+#             return False
 
 
 def un_serialize(data: bytes):

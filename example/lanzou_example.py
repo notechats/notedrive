@@ -38,8 +38,8 @@ def example5():
 
 # example1()
 # example2()
-# example3()
-example4()
-example5()
+example3()
+#example4()
+#example5()
 # https://wws.lanzous.com/b01hjn3aj
 # print(downer._session.cookies)
