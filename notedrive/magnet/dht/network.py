@@ -5,8 +5,7 @@ import random
 from notetool.tool.log import log
 from .crawling import NodeSpiderCrawl, PeerSpiderCrawl
 from .node import Node
-from .protocol import KRPCProtocol
-from .storage import ForgetfulPeerStorage, ForgetfulTokenStorage
+from .protocol import KRPCProtocol, ForgetfulPeerStorage, ForgetfulTokenStorage
 from .utils import digest
 
 logger = log(__name__)
@@ -31,8 +30,8 @@ class Server:
             ksize (int): The k parameter from the paper
             alpha (int): The alpha parameter from the paper
             node_id: The id for this node on the network.
-            storage: An instance that implements
-                     :interface:`~kademlia.storage.IStorage`
+            peer_storage  : An instance that implements
+            token_storage :interface:`~kademlia.storage.IStorage`
         """
         self.ksize = ksize
         self.alpha = alpha
@@ -56,13 +55,7 @@ class Server:
             self.save_state_loop.cancel()
 
     def _create_protocol(self):
-        return self.protocol_class(
-            self.node,
-            self.peer_storage,
-            self.token_storage,
-            self.ksize,
-            buckets=self.buckets,
-        )
+        return self.protocol_class(self.node, self.peer_storage, self.token_storage, self.ksize, buckets=self.buckets, )
 
     async def listen(self, port, interface="0.0.0.0"):
         """
@@ -147,9 +140,7 @@ class Server:
             return future
 
         spider_queue = asyncio.Queue()
-        spider = PeerSpiderCrawl(
-            self.protocol, node, nearest, self.ksize * 4, self.alpha, spider_queue
-        )
+        spider = PeerSpiderCrawl(self.protocol, node, nearest, self.ksize * 4, self.alpha, spider_queue)
         asyncio.create_task(spider.find())
 
         loop = asyncio.get_running_loop()
@@ -235,9 +226,7 @@ class Server:
         """
         self.save_state(fname)
         loop = asyncio.get_event_loop()
-        self.save_state_loop = loop.call_later(
-            frequency, self.save_state_regularly, fname, frequency
-        )
+        self.save_state_loop = loop.call_later(frequency, self.save_state_regularly, fname, frequency)
 
 
 def check_dht_value_type(value):

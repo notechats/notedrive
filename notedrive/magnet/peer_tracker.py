@@ -10,7 +10,7 @@ from yarl import URL
 
 from notetool.tool.log import log
 from . import settings
-from .bencode import bdecode
+from .dht.bencode import bdecode
 
 logger = log(__name__)
 

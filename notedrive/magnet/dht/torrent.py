@@ -23,7 +23,7 @@ class Magnet:
 
     def __init__(self, magnet_link):
         self.name = None
-        self.trackers = None
+        self.trackers = []
         self.infohash = None
 
         try:

@@ -4,6 +4,7 @@ from ipaddress import IPv4Address
 
 from notetool.tool.log import log
 from .node import Node, NodeHeap
+from .protocol import KRPCProtocol
 
 logger = log(__name__)
 
@@ -13,16 +14,14 @@ class SpiderCrawl:
     Crawl the network and look for given 160-bit keys.
     """
 
-    def __init__(self, protocol, node, peers, ksize, alpha):
+    def __init__(self, protocol: KRPCProtocol, node: Node, peers, ksize=8, alpha=100):
         """
         Create a new C{SpiderCrawl}er.
 
         Args:
-            protocol: A :class:`~magnet2torrent.dht.protocol.KRPCProtocol` instance.
-            node: A :class:`~magnet2torrent.dht.node.Node` representing the key we're
-                  looking for
-            peers: A list of :class:`~magnet2torrent.dht.node.Node` instances that
-                   provide the entry point for the network
+            protocol: A :class:`KRPCProtocol` instance.
+            node: A :class:`Node` representing the key we're looking for
+            peers: A list of :class:`Node` instances that provide the entry point for the network
             ksize: The value for k based on the paper
             alpha: The value for alpha based on the paper
         """
@@ -42,9 +41,7 @@ class SpiderCrawl:
 
         tasks = set()
         task_mapping = {}
-        while not self.cancel_crawl and (
-                not self.nearest.have_contacted_all() or tasks
-        ):
+        while not self.cancel_crawl and (not self.nearest.have_contacted_all() or tasks):
             count = self.alpha - len(tasks)
             for peer in self.nearest.get_uncontacted()[:count]:
                 self.nearest.mark_contacted(peer)

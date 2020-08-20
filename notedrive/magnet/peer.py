@@ -4,7 +4,7 @@ import hashlib
 import logging
 import struct
 
-from .bencode import bdecode, bencode
+from .dht.bencode import bdecode, bencode
 from .settings import METADATA_EXCHANGE, PEER_ID, MAX_PACKET_SIZE, EXTENDED_ID_METADATA
 
 logger = logging.getLogger(__name__)

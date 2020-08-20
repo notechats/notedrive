@@ -3,12 +3,12 @@ from itertools import chain
 from urllib.parse import urlparse
 
 from notetool.tool.log import log
-from .bencode import bdecode
+from .dht.bencode import bdecode
+from .dht.torrent import Magnet, Torrent
 from .peer import fetch_from_peer
 from .peer_tracker import retrieve_peers_http_tracker
 from .peer_tracker import retrieve_peers_udp_tracker
 from .settings import DEFAULT_TRACKERS
-from .torrent import Magnet, Torrent
 
 logger = log(__name__)
 
