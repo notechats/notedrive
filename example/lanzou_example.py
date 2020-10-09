@@ -16,7 +16,7 @@ def example2():
 
 
 def example3():
-    download('https://wws.lanzous.com/b01hjn3aj', dir_pwd='./download/lanzou')
+    download('https://wws.lanzous.com/b01hjn3yd', dir_pwd='./download/lanzou')
     # download('https://wws.lanzous.com/b01hh63kf', dir_pwd='./download/lanzou')
     # downer.down_dir_by_url('https://wws.lanzous.com/b01hh2zve', dir_pwd='./download/lanzou')
 
