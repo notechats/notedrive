@@ -1,4 +1,4 @@
-from notedrive.lanzou import LanZouCloud, CodeDetail, download
+from notedrive.lanzou import CodeDetail, LanZouCloud, download
 
 downer = LanZouCloud()
 downer.ignore_limits()
@@ -25,8 +25,9 @@ def example3():
 
 def example4():
     print("upload")
-    res = downer.upload_file('/tmp/models/yolo/configs/yolov3.h5', folder_id=2129808)
-    res = downer.upload_file('/tmp/models/yolo/configs/yolov3.weights', folder_id=2129808)
+    # res = downer.upload_file('/tmp/models/yolo/configs/yolov3.h5', folder_id=2129808)
+    res = downer.upload_file(
+        '/root/workspace/notechats/notedata/example/download/meta_Electronics.json.gz', folder_id=2192474)
 
     print(res)
     pass
@@ -38,8 +39,8 @@ def example5():
 
 # example1()
 # example2()
-example3()
-#example4()
-#example5()
+# example3()
+example4()
+# example5()
 # https://wws.lanzous.com/b01hjn3aj
 # print(downer._session.cookies)

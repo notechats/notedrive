@@ -1,15 +1,16 @@
 import sys
 from os import path
 
-from setuptools import setup, find_packages
+from notebuild.tool import get_version
+from setuptools import find_packages, setup
 
-from notetool.tool import get_version
-
-version_path = path.join(path.abspath(path.dirname(__file__)), 'script/__version__.md')
+version_path = path.join(path.abspath(
+    path.dirname(__file__)), 'script/__version__.md')
 
 version = get_version(sys.argv, version_path, step=32)
 
-install_requires = ['requests', 'demjson', 'tqdm', 'cryptography', 'pycurl', 'urllib3', 'notetool', 'requests_toolbelt']
+install_requires = ['requests', 'demjson', 'tqdm', 'cryptography',
+                    'pycurl', 'urllib3', 'notetool', 'requests_toolbelt']
 
 setup(name='notedrive',
       version=version,
